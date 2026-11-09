@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>HSC Neo</title>
+<meta name="description" content="CDSS de hiperplasia suprarrenal congénita en el recién nacido: tamizaje, crisis perdedora de sal, dosis, diagnóstico diferencial y casos.">
+<meta name="theme-color" content="#2a1216">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="HSC Neo">
+<link rel="apple-touch-icon" id="ati" href="">
+<link rel="icon" id="fav" href="">
+<link rel="manifest" id="mf" href="">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..800;1,9..144,300..700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#f6efe4; --paper2:#efe4d3; --card:#fffaf2; --ink:#2b1d16; --ink2:#5b463b; --mute:#8a7465;
+  --line:#e2d3bf; --terra:#b5552f; --terra2:#d9774c;
+  --sal:#2f6f77; --cort:#c8962e; --andro:#9e2a3a; --ox:#2a1216; --ok:#3f7a4a; --warn:#b7791f; --bad:#a3262e;
+  --serif:'Fraunces',Georgia,'Times New Roman',serif; --sans:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; --mono:'JetBrains Mono',ui-monospace,Menlo,monospace;
+  --safeT:env(safe-area-inset-top,0px); --safeB:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.5}
+body{min-height:100vh;overflow-x:hidden}
+button,input,select{font:inherit;color:inherit}
+a{color:var(--terra)}
+.mono{font-family:var(--mono)}
+/* ---------- CARÁTULA ---------- */
+#cover{position:fixed;inset:0;z-index:50;overflow-y:auto;background:
+ radial-gradient(120% 70% at 50% -10%,#5a1f2a 0%,#2a1216 55%,#170a0c 100%);color:#f6efe4;
+ padding:calc(var(--safeT) + 22px) 20px calc(var(--safeB) + 28px);transition:opacity .45s ease,transform .45s ease}
+#cover.out{opacity:0;transform:scale(1.02);pointer-events:none}
+.cv-wrap{max-width:520px;margin:0 auto}
+.cv-kicker{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#d9b98a;display:flex;justify-content:space-between}
+.cv-title{font-family:var(--serif);font-weight:300;font-size:clamp(34px,10vw,50px);line-height:1.02;margin:14px 0 6px;letter-spacing:-.01em}
+.cv-title em{font-style:italic;font-weight:500;color:#e9c27a}
+.cv-sub{font-family:var(--serif);font-style:italic;font-size:17px;color:#e8d7c2;margin:0 0 4px;font-weight:300}
+.cv-svg{display:block;width:100%;height:auto;margin:10px 0 6px}
+.flow{stroke-dasharray:6 10;animation:flow 1.6s linear infinite}
+.flow.slow{animation-duration:3.2s;opacity:.35}
+@keyframes flow{to{stroke-dashoffset:-32}}
+.pulse{transform-origin:center;transform-box:fill-box;animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
+.drip{animation:drip 2.2s ease-in infinite}
+.drip.d2{animation-delay:.7s}.drip.d3{animation-delay:1.4s}
+@keyframes drip{0%{transform:translateY(0);opacity:0}15%{opacity:1}100%{transform:translateY(34px);opacity:0}}
+@media (prefers-reduced-motion:reduce){.flow,.pulse,.drip{animation:none}}
+.cv-triad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:6px 0 18px}
+.cv-triad div{border-top:2px solid;padding-top:6px;font-size:12px;color:#e8d7c2}
+.cv-triad b{display:block;font-family:var(--serif);font-size:18px;font-weight:500;color:#fff}
+.cv-btns{display:grid;gap:10px}
+.cbtn{border:0;border-radius:14px;padding:15px 16px;font-weight:600;font-size:16px;text-align:left;display:flex;justify-content:space-between;align-items:center;cursor:pointer}
+.cbtn small{display:block;font-weight:400;font-size:12.5px;opacity:.85}
+.cbtn.main{background:#f6efe4;color:var(--ox)}
+.cbtn.red{background:linear-gradient(90deg,#a3262e,#c2412f);color:#fff}
+.cbtn.ghost{background:rgba(246,239,228,.08);color:#f6efe4;border:1px solid rgba(246,239,228,.18)}
+.cv-foot{margin-top:22px;font-size:11.5px;color:#bba48c;line-height:1.55;border-top:1px solid rgba(246,239,228,.12);padding-top:12px}
+.cv-foot b{color:#e8d7c2;font-weight:600}
+/* ---------- APP ---------- */
+header.top{position:sticky;top:0;z-index:20;background:rgba(246,239,228,.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:calc(var(--safeT) + 8px) 0 0}
+.hbar{display:flex;align-items:center;gap:10px;padding:0 14px 8px}
+.hlogo{width:34px;height:34px;border-radius:9px;flex:none;cursor:pointer}
+.htitle{font-family:var(--serif);font-size:19px;font-weight:600;line-height:1.1}
+.htitle small{display:block;font-family:var(--sans);font-size:11.5px;font-weight:400;color:var(--mute)}
+.sos{margin-left:auto;background:var(--bad);color:#fff;border:0;border-radius:999px;padding:7px 12px;font-size:13px;font-weight:700;cursor:pointer}
+nav.tabs{display:flex;gap:6px;overflow-x:auto;padding:0 12px 10px;scrollbar-width:none}
+nav.tabs::-webkit-scrollbar{display:none}
+.tab{flex:none;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:7px 13px;font-size:13.5px;font-weight:500;cursor:pointer;white-space:nowrap}
+.tab.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+main{max-width:760px;margin:0 auto;padding:16px 14px calc(var(--safeB) + 60px)}
+h2{font-family:var(--serif);font-weight:500;font-size:26px;line-height:1.15;margin:4px 0 6px}
+h3{font-family:var(--serif);font-weight:600;font-size:19px;margin:18px 0 8px}
+h4{font-size:14px;text-transform:uppercase;letter-spacing:.08em;color:var(--terra);margin:14px 0 6px}
+.lede{color:var(--ink2);margin:0 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 15px;margin:10px 0}
+.card.alert{border-color:#e7b3ad;background:#fff3f0}
+.card.gold{border-color:#ead39f;background:#fff8e6}
+.card.teal{border-color:#b8d6d6;background:#f0f8f7}
+.card.dark{background:var(--ox);color:#f6efe4;border-color:var(--ox)}
+.card.dark a{color:#e9c27a}
+.pill{display:inline-block;font-size:11.5px;font-weight:600;padding:2px 8px;border-radius:999px;background:var(--paper2);color:var(--ink2);margin:0 4px 4px 0}
+.pill.red{background:#f6d8d4;color:var(--bad)}.pill.gold{background:#f6e7c2;color:#7a5a10}.pill.teal{background:#d4ebe9;color:var(--sal)}.pill.green{background:#d9ecd9;color:var(--ok)}
+ul.clean{padding-left:18px;margin:6px 0}
+ul.clean li{margin:4px 0}
+.seg{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 10px}
+.seg button{border:1px solid var(--line);background:#fff;border-radius:10px;padding:8px 11px;font-size:14px;cursor:pointer}
+.seg button.on{background:var(--terra);border-color:var(--terra);color:#fff}
+label.f{display:block;font-size:13px;font-weight:600;color:var(--ink2);margin:10px 0 4px}
+input.n,select.n{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:11px;background:#fff;font-size:16px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.chk{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px dashed var(--line);font-size:14.5px}
+.chk:last-child{border-bottom:0}
+.chk input{width:20px;height:20px;margin-top:2px;accent-color:var(--terra);flex:none}
+.steps{counter-reset:s;list-style:none;padding:0;margin:0}
+.steps>li{counter-increment:s;position:relative;padding:0 0 4px 44px;margin:0 0 6px}
+.steps>li:before{content:counter(s);position:absolute;left:0;top:12px;width:30px;height:30px;border-radius:50%;background:var(--ink);color:var(--paper);font-family:var(--mono);font-size:13px;display:grid;place-items:center}
+.steps>li:after{content:"";position:absolute;left:14.5px;top:44px;bottom:-6px;width:1px;background:var(--line)}
+.steps>li:last-child:after{display:none}
+.steps .card{margin:6px 0}
+.t-tag{font-family:var(--mono);font-size:11px;color:var(--terra);letter-spacing:.06em;text-transform:uppercase}
+.out{font-family:var(--mono);font-size:15px}
+.big{font-family:var(--serif);font-size:30px;font-weight:600;line-height:1}
+.row{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:14.5px}
+.row:last-child{border-bottom:0}
+.row b{font-family:var(--mono);font-weight:600;text-align:right}
+.verdict{border-radius:14px;padding:14px;margin:12px 0;color:#fff}
+.v-red{background:var(--bad)}.v-gold{background:#a26b12}.v-green{background:var(--ok)}.v-grey{background:#6b5a4f}
+.verdict h3{color:#fff;margin:0 0 4px}
+.bar{height:8px;background:var(--paper2);border-radius:99px;overflow:hidden;margin:6px 0}
+.bar i{display:block;height:100%;background:var(--terra);border-radius:99px}
+details{background:var(--card);border:1px solid var(--line);border-radius:14px;margin:8px 0;padding:0 14px}
+details>summary{cursor:pointer;padding:12px 0;font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:8px}
+details>summary::-webkit-details-marker{display:none}
+details>summary:after{content:"+";font-family:var(--mono);color:var(--terra)}
+details[open]>summary:after{content:"–"}
+details>div{padding:0 0 12px}
+table.t{width:100%;border-collapse:collapse;font-size:13.5px;margin:6px 0}
+table.t th,table.t td{border-bottom:1px solid var(--line);padding:7px 5px;text-align:left;vertical-align:top}
+table.t th{font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--mute)}
+.scroll{overflow-x:auto}
+.case-h{display:flex;gap:12px;align-items:center}
+.case-n{font-family:var(--serif);font-size:44px;font-weight:300;color:var(--terra);line-height:1}
+.q{background:#fff;border-left:3px solid var(--terra);padding:10px 12px;margin:10px 0;border-radius:0 10px 10px 0}
+.reveal{border:1px solid var(--line);background:var(--paper2);border-radius:10px;padding:9px 12px;font-weight:600;cursor:pointer;width:100%;text-align:left;margin-top:6px}
+.ans{display:none;margin-top:8px;padding:10px 12px;background:#f0f8f7;border-radius:10px;font-size:14.5px}
+.ans.on{display:block}
+.foot{font-size:12px;color:var(--mute);margin-top:26px;border-top:1px solid var(--line);padding-top:12px}
+.btn{border:0;background:var(--ink);color:var(--paper);border-radius:11px;padding:11px 14px;font-weight:600;cursor:pointer}
+.btn.t{background:var(--terra)}
+.btn.l{background:var(--paper2);color:var(--ink)}
+.flex{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.small{font-size:13px;color:var(--ink2)}
+.hr{height:1px;background:var(--line);margin:14px 0}
+#ecard{display:none}
+@media print{
+  body *{visibility:hidden}
+  #ecard,#ecard *{visibility:visible}
+  #ecard{display:block!important;position:absolute;left:0;top:0;width:100%}
+}
+.ecard{border:3px solid var(--bad);border-radius:16px;padding:16px;background:#fff}
+.ecard h3{color:var(--bad);margin-top:0}
+</style>
+</head>
+<body>
+
+<!-- ================= CARÁTULA ================= -->
+<section id="cover" aria-label="Carátula">
+ <div class="cv-wrap">
+  <div class="cv-kicker"><span>CDSS · Neonatología</span><span>v1.0 · nov 2026</span></div>
+  <h1 class="cv-title">Hiperplasia<br>suprarrenal <em>congénita</em></h1>
+  <p class="cv-sub">Tres cosas en juego en las primeras dos semanas: la sal, el azúcar y el nombre.</p>
+
+  <svg class="cv-svg" viewBox="0 0 360 330" role="img" aria-label="Esteroidogénesis suprarrenal con el bloqueo de la 21-hidroxilasa desviando los precursores hacia los andrógenos">
+   <defs>
+    <linearGradient id="gA" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e05a68"/><stop offset="1" stop-color="#9e2a3a"/></linearGradient>
+    <radialGradient id="gP" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#e9c27a" stop-opacity=".95"/><stop offset="1" stop-color="#e9c27a" stop-opacity="0"/></radialGradient>
+   </defs>
+   <!-- corona suprarrenal sobre riñón (marca) -->
+   <g opacity=".06" fill="none" stroke="#f6efe4" stroke-width="1.2">
+    <path d="M180 18 L150 52 L210 52 Z"/>
+    <path d="M140 60 C120 60 112 90 128 104 C140 114 150 104 160 112 C172 120 176 140 196 140 C230 140 240 60 196 58 Z"/>
+   </g>
+   <!-- colesterol -->
+   <circle cx="180" cy="34" r="16" fill="none" stroke="#f6efe4" stroke-width="1.5"/>
+   <text x="180" y="38" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#f6efe4">CHOL</text>
+   <path d="M180 50 V78" stroke="#f6efe4" stroke-width="2.4" class="flow"/>
+   <text x="192" y="70" font-family="Inter,sans-serif" font-size="9" fill="#d9b98a">StAR · P450scc</text>
+   <!-- pregnenolona y reparto -->
+   <circle cx="180" cy="86" r="6" fill="#f6efe4"/>
+   <path d="M180 86 C140 96 80 96 70 120 V150" fill="none" stroke="#7fb3b8" stroke-width="2.4" class="flow"/>
+   <path d="M180 86 V150" fill="none" stroke="#e9c27a" stroke-width="2.4" class="flow"/>
+   <path d="M180 86 C220 96 280 96 290 120 V150" fill="none" stroke="#e05a68" stroke-width="2.4" class="flow"/>
+   <!-- pozo de 17-OHP -->
+   <circle cx="180" cy="160" r="30" fill="url(#gP)" class="pulse"/>
+   <text x="180" y="164" text-anchor="middle" font-family="Fraunces,serif" font-style="italic" font-size="14" fill="#2a1216" font-weight="600">17-OHP</text>
+   <!-- dique CYP21A2 -->
+   <rect x="40" y="198" width="176" height="20" rx="10" fill="#c8962e"/>
+   <text x="128" y="212" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10" font-weight="600" fill="#2a1216">✕ CYP21A2 · 21-hidroxilasa</text>
+   <path d="M70 150 V198" stroke="#7fb3b8" stroke-width="2.4" class="flow"/>
+   <!-- canales bloqueados -->
+   <path d="M70 218 V292" stroke="#7fb3b8" stroke-width="2.4" class="flow slow"/>
+   <path d="M180 218 V292" stroke="#e9c27a" stroke-width="2.4" class="flow slow"/>
+   <!-- desvío al canal androgénico -->
+   <path d="M206 168 C240 176 268 170 290 186" fill="none" stroke="#e05a68" stroke-width="3" class="flow"/>
+   <path d="M290 150 V292" stroke="url(#gA)" stroke-width="9" stroke-linecap="round"/>
+   <path d="M290 150 V292" stroke="#ffd0d5" stroke-width="2" class="flow"/>
+   <circle cx="306" cy="262" r="3" fill="#e05a68" class="drip"/>
+   <circle cx="276" cy="256" r="2.5" fill="#e05a68" class="drip d2"/>
+   <circle cx="312" cy="236" r="2" fill="#e05a68" class="drip d3"/>
+   <!-- bucle ACTH -->
+   <path d="M330 120 C352 70 300 20 200 26" fill="none" stroke="#d9b98a" stroke-width="1.2" stroke-dasharray="3 4"/>
+   <text x="318" y="64" font-family="JetBrains Mono,monospace" font-size="9" fill="#d9b98a" text-anchor="end">ACTH ↑</text>
+   <!-- rótulos inferiores -->
+   <text x="70" y="310" text-anchor="middle" font-family="Fraunces,serif" font-size="13" fill="#7fb3b8">aldosterona</text>
+   <text x="180" y="310" text-anchor="middle" font-family="Fraunces,serif" font-size="13" fill="#e9c27a">cortisol</text>
+   <text x="290" y="310" text-anchor="middle" font-family="Fraunces,serif" font-size="13" fill="#ff8e9a">andrógenos</text>
+   <text x="70" y="324" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#bba48c">↓ sal · K⁺ ↑</text>
+   <text x="180" y="324" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#bba48c">↓ glucosa · shock</text>
+   <text x="290" y="324" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" fill="#bba48c">virilización 46,XX</text>
+  </svg>
+
+  <div class="cv-triad">
+   <div style="border-color:#7fb3b8"><b>La sal</b>crisis perdedora de sal, días 7–21</div>
+   <div style="border-color:#e9c27a"><b>El azúcar</b>hipoglucemia y shock por falta de cortisol</div>
+   <div style="border-color:#e05a68"><b>El nombre</b>genitales atípicos: no asignar sexo a ciegas</div>
+  </div>
+
+  <div class="cv-btns">
+   <button class="cbtn red" data-go="ruta:C"><span>Crisis perdedora de sal<small>Vómito, letargia, Na⁺ bajo, K⁺ alto, shock</small></span><span>→</span></button>
+   <button class="cbtn main" data-go="ruta:A"><span>Tamizaje neonatal positivo<small>17-OHP elevada: qué hacer hoy</small></span><span>→</span></button>
+   <button class="cbtn ghost" data-go="ruta:B"><span>Genitales atípicos al nacer<small>Ruta DSD y vigilancia de sal</small></span><span>→</span></button>
+   <button class="cbtn ghost" data-go="dosis"><span>Calculadora de dosis<small>Mantenimiento, estrés, crisis y tarjeta de emergencia</small></span><span>→</span></button>
+  </div>
+
+  <div class="cv-foot">
+   <b>Dr. Jano Jaramillo — Médico Pediatra y Neonatólogo · Posgrado en Trastornos del Aprendizaje</b><br>
+   Sala de Neonatología · Hospital Dr. Cecilio Castillero · Chitré, Panamá<br>
+   Base: Endocrine Society 2018, ANZSPED 2025, JCEM 2025 Suppl 1, tamizaje de 2.º nivel con 21-desoxicortisol (2021–2025), CAHtalyst 2024–2026. Herramienta de apoyo: no reemplaza el juicio clínico ni la consulta con endocrinología pediátrica.
+  </div>
+ </div>
+</section>
+
+<!-- ================= APP ================= -->
+<header class="top">
+ <div class="hbar">
+  <canvas class="hlogo" id="hlogo" width="68" height="68" title="Carátula"></canvas>
+  <div class="htitle">HSC Neo<small>Hiperplasia suprarrenal congénita</small></div>
+  <button class="sos" data-go="ruta:C">CRISIS</button>
+ </div>
+ <nav class="tabs" id="tabs"></nav>
+</header>
+<main id="app"></main>
+<div id="ecard"></div>
+
+<script>
+"use strict";
+/* ============ UTILIDADES ============ */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const r1=x=>Math.round(x*10)/10, r2=x=>Math.round(x*100)/100, rq=x=>Math.round(x*4)/4;
+const fmt=(x,d=1)=>isFinite(x)?Number(x).toLocaleString('es-PA',{maximumFractionDigits:d,minimumFractionDigits:0}):'—';
+const S={view:'ruta',route:'A',w:'',l:'',ohp:{tipo:'tam',df:'na',rat:'na'},ddx:{k:'',g:'',gon:'',salt:'',o:'',f:{}},ems:{}};
+
+const TABS=[['ruta','Rutas'],['dosis','Dosis'],['ohp','17-OHP'],['ddx','Diferencial'],['genit','Genitales'],['segui','Seguimiento'],['casos','Casos'],['refs','Evidencia']];
+
+/* ============ RUTAS ============ */
+const UNSTABLE=`<div class="card alert"><b>¿Está inestable?</b> Vómito, rechazo del alimento, letargia, mala perfusión, pérdida de peso &gt;10 %, Na⁺ &lt;130, K⁺ &gt;6,5 mEq/L o glucosa &lt;50 mg/dL → <a href="#" data-go="ruta:C"><b>Ruta C ahora</b></a>. No espere la confirmación para dar hidrocortisona.</div>`;
+
+const ROUTES={
+A:{t:'Tamizaje neonatal positivo',s:'Tamizaje +',k:'Ruta A',sub:'Un valor sobre el punto de corte es una sospecha, no un diagnóstico; un valor muy alto es una urgencia del mismo día.',pre:UNSTABLE,steps:[
+ {t:'Hoy',h:'Localizar y evaluar el mismo día',b:['Llamar a la familia y ver al RN en horas, no en días. El riesgo de crisis se concentra entre los días 7 y 21.','Preguntar: alimentación, vómitos, diuresis, somnolencia, peso actual frente al de nacimiento.','Examinar: perfusión, PA, hidratación, genitales (clitoromegalia, fusión labioescrotal, seno urogenital), gónadas palpables, hiperpigmentación de escroto, labios o areolas.','En el varón con genitales típicos nada en el examen descarta la forma perdedora de sal.']},
+ {t:'Antes de cualquier esteroide',h:'Muestras críticas',b:['Na⁺, K⁺, Cl⁻, gases, glucosa, urea y creatinina.','17-OHP sérica (por LC-MS/MS si está disponible), androstenediona, cortisol y ACTH.','Renina (actividad o concentración) y aldosterona.','Guardar 1 mL de suero congelado para perfil de esteroides de 2.º nivel (21-desoxicortisol, 11-desoxicortisol, 17-OH-pregnenolona).','Tubo EDTA para genotipo CYP21A2. Cariotipo y SRY si los genitales son atípicos o el sexo es incierto.'],note:'Si el RN está inestable, una sola muestra de suero tomada con la vía es suficiente; nunca retrase la hidrocortisona por el laboratorio.'},
+ {t:'Decisión',h:'Tratar, observar o repetir',b:['<b>Inestable</b> → Ruta C.','<b>Estable con 17-OHP muy alta, o 46,XX virilizada, o electrolitos que empiezan a desviarse</b> → iniciar tras las muestras: hidrocortisona 10–15 mg/m²/día en 3 tomas, fludrocortisona 0,1–0,2 mg/día y NaCl 1–2 g/día cuando la alimentación esté establecida. Ingreso para observar 24–48 h.','<b>Estable, 17-OHP limítrofe, genitales típicos y electrolitos normales</b> → no tratar por el número. Repetir 17-OHP (idealmente perfil de 2.º nivel) y electrolitos cada 48–72 h hasta las 2–3 semanas; enseñar signos de alarma.'],calc:true},
+ {t:'Lectura',h:'Lo que cambia la interpretación',b:['Prematurez, bajo peso y enfermedad crítica elevan la 17-OHP sin HSC (falsos positivos): use los cortes estratificados por EG/peso de su laboratorio (Ruta D).','Muestra tomada antes de las 24 h: falsos positivos.','Esteroides prenatales a la madre (betametasona, dexametasona) o hidrocortisona al RN: pueden suprimir la 17-OHP y dar falsos negativos → repetir a las ~2 semanas.','El 2.º nivel por LC-MS/MS con 21-desoxicortisol y el cociente (17-OHP + androstenediona)/cortisol reduce mucho los falsos positivos.'],link:['ohp','Abrir el intérprete de 17-OHP']},
+ {t:'Confirmación',h:'Cerrar el diagnóstico',b:['17-OHP sérica muy elevada (en la forma clásica suele superar 300 nmol/L ≈ 100 ng/mL) con renina alta y clínica compatible basta para tratar.','Valores intermedios: prueba de ACTH (cosintropina) con 17-OHP a los 60 min, o perfil de 2.º nivel; en el RN la prueba se reserva para casos dudosos y estables.','Genotipo CYP21A2: confirma, anticipa la gravedad (nulo/A → perdedora de sal; I172N → virilizante simple) y permite el consejo genético (25 % de recurrencia).']},
+ {t:'Antes del alta',h:'Red y educación',b:['Llamada a endocrinología pediátrica el mismo día del diagnóstico.','Enseñar dosis de estrés, entregar tarjeta de emergencia y vial de hidrocortisona 100 mg con jeringa para uso IM.','Cita de control en 1 semana con electrolitos, peso y PA.'],link:['dosis','Generar tarjeta de emergencia']}
+]},
+B:{t:'Genitales atípicos al nacer',s:'Genitales atípicos',k:'Ruta B',sub:'Una urgencia médica y psicosocial, no una urgencia quirúrgica. La pregunta urgente no es el sexo: es la sal.',pre:'',steps:[
+ {t:'Sala de partos',h:'No asignar sexo a ciegas',b:['Decir a la familia, con calma y sin adjetivos, que los genitales del bebé no permiten saber todavía si es niño o niña y que hay pruebas para aclararlo en pocos días.','Hablar del "bebé" por su nombre si ya lo tienen, o "su bebé"; evitar términos como hermafrodita o "intersexo" como diagnóstico.','Postergar el registro del sexo si la normativa local lo permite y evitar que la familia lo anuncie antes de los resultados.']},
+ {t:'Examen',h:'Describir antes que interpretar',b:['Puntaje de masculinización externa (EMS) y estadio de Prader.','Gónadas: palpables en escroto, labios o ingle casi siempre son testículos → piense en 46,XY o en DSD ovotesticular.','Meato uretral y presencia de seno urogenital; hiperpigmentación; PA; dismorfias (craneosinostosis o sinostosis radiohumeral → déficit de POR).'],link:['genit','Calcular EMS y Prader']},
+ {t:'Regla de oro',h:'Virilización + gónadas no palpables = HSC 46,XX hasta demostrar lo contrario',b:['Es la causa más frecuente de genitales atípicos en el RN y la única que puede matar en la segunda semana.','Desde ese momento, vigilancia de sal: electrolitos al día 3 y luego cada 48 h, peso diario, glucosa.']},
+ {t:'Estudios',h:'Primeras 72 horas',b:['Cariotipo urgente y SRY por FISH o PCR (resultado en 24–72 h).','Ecografía pélvica y suprarrenal: útero presente apoya 46,XX; suprarrenales grandes de aspecto "cerebriforme" apoyan HSC. Una ecografía normal no la descarta.','17-OHP sérica desde las 36–48 h (en las primeras 24 h es alta en todos los RN), androstenediona, testosterona, 11-desoxicortisol, cortisol, ACTH, renina y aldosterona.','Si 46,XY o gónadas palpables: AMH e inhibina B, testosterona/DHT, 17-OH-pregnenolona y DHEA (déficit de 3β-HSD).'],link:['ddx','Abrir el diagnóstico diferencial']},
+ {t:'Equipo',h:'Equipo de DSD',b:['Endocrinología pediátrica, urología o cirugía pediátrica, genética, psicología y trabajo social, con un solo vocero para la familia.','Cirugía genital: decisión compartida, sin urgencia; la guía de la Endocrine Society 2018 pide discutir todas las opciones, incluida la de diferir.','En 46,XX con HSC la gran mayoría se identifica como mujer y conserva la fertilidad potencial; ese dato ayuda a la familia, sin sustituir el proceso.']},
+ {t:'Tratamiento',h:'Cuándo empezar',b:['Estable: tomar todas las muestras, luego iniciar hidrocortisona, fludrocortisona y NaCl en cuanto la 17-OHP confirme (o antes si los electrolitos se desvían).','Inestable: Ruta C sin esperar resultados.'],calc:true}
+]},
+C:{t:'Crisis perdedora de sal',s:'Crisis de sal',k:'Ruta C · emergencia',sub:'Típicamente días 7–21, sobre todo en varones con genitales típicos que nadie sospechó. La crisis suprarrenal sigue siendo la primera causa de muerte en la HSC.',pre:'',steps:[
+ {t:'Reconocer',h:'El cuadro',b:['Rechazo del alimento, vómitos, pérdida de peso, letargia, deshidratación, hipotensión o shock.','Na⁺ bajo, K⁺ alto, acidosis metabólica, hipoglucemia, urea elevada. El K⁺ alto con Na⁺ bajo en un RN deshidratado es suprarrenal hasta demostrar lo contrario.','Diferencial inmediato: sepsis, estenosis pilórica (alcalosis hipoclorémica con K⁺ bajo: lo opuesto), seudohipoaldosteronismo (ITU, uropatía), hipoplasia suprarrenal congénita.']},
+ {t:'0–5 min',h:'Acceso, glucosa y una muestra',b:['ABC, monitor, acceso IV o IO.','Glucosa capilar.','Una muestra de suero antes del esteroide solo si no retrasa: electrolitos, gases, glucosa, 17-OHP, cortisol, ACTH, renina, aldosterona y suero guardado. Hemocultivo.']},
+ {t:'5–15 min',h:'Hidrocortisona y volumen',b:['<b>Hidrocortisona 25 mg IV o IM en bolo</b> (o 50–100 mg/m²). No esperar resultados.','<b>SSN 0,9 % 10–20 mL/kg</b> en 10–20 min; reevaluar y repetir hasta 40–60 mL/kg en la primera hora si persiste el shock, vigilando hígado y función cardiaca.','<b>Glucosa &lt;50 mg/dL:</b> dextrosa 10 % 2 mL/kg y luego VIG 6–8 mg/kg/min.','Antibióticos empíricos si la sepsis no puede descartarse.'],calc:true},
+ {t:'Si K⁺ ≥7 o ECG alterado',h:'Hiperpotasemia',b:['La hidrocortisona y el SSN la corrigen en horas en la mayoría.','Ondas T picudas, QRS ancho o arritmia: <b>gluconato de calcio 10 % 0,5–1 mL/kg</b> IV en 5–10 min con monitor.','Salbutamol nebulizado; insulina regular 0,1 U/kg con dextrosa 0,5 g/kg (D10 % 5 mL/kg) y glucemia cada 30 min.','Evitar resinas de intercambio en el neonato (obstrucción intestinal, ECN).']},
+ {t:'Primeras 24 h',h:'Mantener y no sobrecorregir',b:['Hidrocortisona 50–100 mg/m²/día IV dividida cada 6 h (o en infusión continua).','A esta dosis la hidrocortisona tiene efecto mineralocorticoide: la fludrocortisona no hace falta mientras dure la dosis alta.','Na⁺: subir no más de 8–10 mEq/L en 24 h; convulsión por hiponatremia → NaCl 3 % 2–3 mL/kg.','Electrolitos y glucosa cada 2–4 h; PA, diuresis, peso, ECG continuo mientras el K⁺ esté alto.']},
+ {t:'24–72 h',h:'Transición',b:['Cuando tolere la vía oral y esté estable: pasar a hidrocortisona oral de estrés (≈3 veces el mantenimiento) y bajar a mantenimiento (10–15 mg/m²/día) en 3–7 días.','Iniciar fludrocortisona 0,1–0,2 mg/día cuando la hidrocortisona baje de ≈50 mg/m²/día, y NaCl 1–2 g/día con la alimentación.','Confirmar con 17-OHP de la muestra inicial y genotipo; avisar a endocrinología pediátrica.']},
+ {t:'En casa',h:'El paciente ya diagnosticado',b:['Vómitos, no tolera la vía oral, letargia o diarrea intensa: <b>hidrocortisona 25 mg IM</b> (lactante) en casa y traslado a urgencias.','En urgencias, el niño con HSC conocida y vómitos se trata primero y se estudia después.']}
+]},
+D:{t:'Prematuro o RN crítico con 17-OHP alta',s:'Prematuro / crítico',k:'Ruta D',sub:'La mayoría de los tamizajes positivos en prematuros son falsos positivos; la mayoría de los falsos negativos vienen de esteroides prenatales.',pre:UNSTABLE,steps:[
+ {t:'Fisiología',h:'Por qué el número miente',b:['La suprarrenal del prematuro conserva la zona fetal, con actividad baja de 3β-HSD y 11β-hidroxilasa: se acumulan 17-OHP y esteroides sulfatados.','El estrés (ventilación, sepsis, hipotensión) eleva la ACTH; los inmunoensayos de 1.er nivel reaccionan de forma cruzada con esteroides fetales.']},
+ {t:'Pregunta',h:'¿Hay algo más que el número?',b:['Niña con genitales virilizados, hiperpigmentación, Na⁺ bajo con K⁺ alto inexplicables (recuerde la pérdida renal de sodio del prematuro y los diuréticos), hipoglucemia o hipotensión refractaria.']},
+ {t:'Si no hay clínica',h:'No tratar por el número',b:['Pedir 2.º nivel por LC-MS/MS en la misma tarjeta (21-desoxicortisol y cociente (17-OHP + androstenediona)/cortisol) si su programa lo ofrece.','Si no existe: repetir el tamizaje a las ~2 semanas (o según el programa) y/o 17-OHP sérica por LC-MS/MS.','Interpretar con los cortes por EG o peso de su laboratorio, nunca con los del RN a término.'],link:['ohp','Abrir el intérprete de 17-OHP']},
+ {t:'Esteroides',h:'Lo que oculta la HSC',b:['Betametasona o dexametasona prenatal e hidrocortisona posnatal (hipotensión, DBP) suprimen la 17-OHP: un tamizaje normal en esas condiciones no descarta HSC → repetir.','Tomar la muestra antes de iniciar hidrocortisona siempre que sea posible.']},
+ {t:'Si hay señales',h:'Tratar como clásica',b:['21-desoxicortisol detectable o 17-OHP sérica muy alta y persistente → HSC clásica: hidrocortisona, fludrocortisona y NaCl, genotipo y endocrinología.','Hipotensión refractaria a vasopresores: la dosis de estrés de hidrocortisona es razonable por insuficiencia suprarrenal relativa, con muestras tomadas antes.']}
+]}
+};
+
+const ESSENTIAL=`<details><summary>Lo esencial en un minuto</summary><div>
+<ul class="clean">
+<li>El 95 % de la HSC se debe a déficit de <b>21-hidroxilasa</b> (gen <span class="mono">CYP21A2</span>), autosómica recesiva. La clásica afecta a 1 de cada 10 000–20 000 nacidos; el tamizaje nacional de Turquía (≈1,1 millones de RN, 2022) encontró 1 en 12 044.</li>
+<li><b>Clásica perdedora de sal</b> (≈75 %): sin cortisol ni aldosterona → crisis en la 2.ª–3.ª semana. <b>Virilizante simple</b> (≈25 %): aldosterona suficiente; en el varón se diagnostica tarde (pubarca, aceleración del crecimiento). <b>No clásica</b>: no da crisis neonatal y el tamizaje la detecta poco.</li>
+<li>El bloqueo desvía los precursores (17-OHP) hacia los andrógenos: la niña 46,XX nace virilizada; el varón 46,XY nace con genitales típicos y por eso su primera manifestación puede ser la crisis.</li>
+<li>El tamizaje con 17-OHP reduce la mortalidad sobre todo en varones; su talón de Aquiles son los falsos positivos en prematuros, que el 2.º nivel con <b>21-desoxicortisol</b> por LC-MS/MS ha reducido de forma notable.</li>
+</ul></div></details>`;
+
+function vRuta(){
+ const r=ROUTES[S.route];
+ let h=`<h2>Rutas de decisión</h2><p class="lede">Elija la puerta de entrada. Cada ruta es secuencial; marque los pasos a medida que los cumple.</p>
+ <div class="seg">${Object.keys(ROUTES).map(k=>`<button class="${k===S.route?'on':''}" data-route="${k}">${k} · ${ROUTES[k].s}</button>`).join('')}</div>
+ ${S.route==='A'?ESSENTIAL:''}
+ <div class="card ${S.route==='C'?'alert':'dark'}"><div class="t-tag" style="${S.route==='C'?'':'color:#e9c27a'}">${r.k}</div><h3 style="margin:2px 0 4px">${r.t}</h3><div style="font-size:14.5px">${r.sub}</div></div>
+ ${r.pre}<ol class="steps">`;
+ r.steps.forEach((s,i)=>{
+  h+=`<li><div class="card"><div class="t-tag">${s.t}</div><b>${s.h}</b>
+  ${s.b.map((x,j)=>`<label class="chk"><input type="checkbox"><span>${x}</span></label>`).join('')}
+  ${s.note?`<div class="small" style="margin-top:6px">⚠︎ ${s.note}</div>`:''}
+  ${s.calc?quickCalc():''}
+  ${s.link?`<div style="margin-top:8px"><button class="btn l" data-go="${s.link[0]}">${s.link[1]} →</button></div>`:''}
+  </div></li>`;
+ });
+ return h+'</ol>';
+}
+
+/* ============ DOSIS ============ */
+function bsa(w,l){
+ if(w>0&&l>0) return {v:Math.sqrt(w*l/3600),m:'Mosteller'};
+ if(w>0) return {v:(4*w+7)/(w+90),m:'(4P+7)/(P+90), sin talla'};
+ return null;
+}
+function doses(w,l){
+ const b=bsa(w,l); if(!b) return null;
+ const A=b.v;
+ return {A,m:b.m,
+  hcM:[10*A,15*A], hcI:[20*A,25*A], hcS:[30*A,50*A],
+  bolo:Math.min(25,Math.max(25,0)), boloBSA:[50*A,100*A], hcIV:[50*A,100*A],
+  fc:[0.05,0.2], nacl:[1,2], naclMeq:[17.1,34.2], ssn:[10*w,20*w], d10:2*w, cagl:[0.5*w,1*w], ins:0.1*w, dex:5*w};
+}
+function quickCalc(){
+ const w=parseFloat(S.w), l=parseFloat(S.l), d=doses(w,l);
+ if(!d) return `<div class="small" style="margin-top:8px">Ingrese peso (y talla) en <a href="#" data-go="dosis">Dosis</a> para ver las cifras de este paciente aquí.</div>`;
+ return `<div class="card gold" style="margin-top:10px"><div class="t-tag">Para ${fmt(w,2)} kg · SC ${fmt(d.A,3)} m²</div>
+ <div class="row"><span>Bolo de crisis</span><b>HC 25 mg IV/IM</b></div>
+ <div class="row"><span>HC IV de estrés</span><b>${fmt(d.hcIV[0]/4,2)}–${fmt(d.hcIV[1]/4,2)} mg c/6 h</b></div>
+ <div class="row"><span>SSN 0,9 %</span><b>${fmt(d.ssn[0],0)}–${fmt(d.ssn[1],0)} mL</b></div>
+ <div class="row"><span>D10 % si glucosa &lt;50</span><b>${fmt(d.d10,1)} mL</b></div>
+ <div class="row"><span>HC oral mantenimiento</span><b>${fmt(rq(d.hcM[0]/3),2)}–${fmt(rq(d.hcM[1]/3),2)} mg c/8 h</b></div></div>`;
+}
+function vDosis(){
+ const w=parseFloat(S.w), l=parseFloat(S.l), d=doses(w,l);
+ let h=`<h2>Calculadora de dosis</h2><p class="lede">Dosis por superficie corporal. Redondeo a 0,25 mg para que sean administrables.</p>
+ <div class="card"><div class="grid2">
+  <div><label class="f">Peso (kg)</label><input class="n" id="w" inputmode="decimal" placeholder="3,2" value="${esc(S.w)}"></div>
+  <div><label class="f">Talla (cm)</label><input class="n" id="l" inputmode="decimal" placeholder="50" value="${esc(S.l)}"></div>
+ </div><div class="small" style="margin-top:6px">Sin talla se usa (4×peso+7)/(peso+90).</div></div>`;
+ if(!d) return h+`<div class="card small">Ingrese al menos el peso.</div>`+DOSE_NOTES;
+ const per=(a,n)=>`${fmt(rq(a[0]/n),2)}–${fmt(rq(a[1]/n),2)}`;
+ h+=`<div class="card dark"><div class="flex" style="justify-content:space-between"><div><div class="t-tag" style="color:#e9c27a">Superficie corporal</div><div class="big">${fmt(d.A,3)} m²</div></div><div class="small" style="color:#d9c6ad;text-align:right">${d.m}</div></div></div>
+
+ <h3>Mantenimiento oral</h3>
+ <div class="card">
+  <div class="row"><span><b>Hidrocortisona</b> 10–15 mg/m²/día</span><b>${fmt(d.hcM[0],2)}–${fmt(d.hcM[1],2)} mg/día</b></div>
+  <div class="row"><span>en 3 tomas (c/8 h)</span><b>${per(d.hcM,3)} mg/toma</b></div>
+  <div class="row"><span>Inicio en RN con andrógenos muy altos <span class="pill gold">solo días–pocas semanas</span></span><b>${fmt(d.hcI[0],2)}–${fmt(d.hcI[1],2)} mg/día</b></div>
+  <div class="row"><span><b>Fludrocortisona</b></span><b>0,05–0,2 mg/día</b></div>
+  <div class="row"><span>habitual en RN</span><b>0,1–0,2 mg/día en 1–2 tomas</b></div>
+  <div class="row"><span><b>NaCl</b> 1–2 g/día (17–34 mEq/día)</span><b>${fmt(d.naclMeq[0]/w,1)}–${fmt(d.naclMeq[1]/w,1)} mEq/kg/día</b></div>
+  <div class="row"><span>como NaCl 3 % (0,51 mEq/mL)</span><b>${fmt(d.naclMeq[0]/0.513,0)}–${fmt(d.naclMeq[1]/0.513,0)} mL/día</b></div>
+  <div class="row"><span>como NaCl 20 % (3,4 mEq/mL)</span><b>${fmt(d.naclMeq[0]/3.42,1)}–${fmt(d.naclMeq[1]/3.42,1)} mL/día</b></div>
+  <div class="small" style="margin-top:6px">Repartir el NaCl entre las tomas del día, nunca en un solo bolo. La necesidad de fludrocortisona y sal es máxima en la lactancia (resistencia relativa a mineralocorticoides) y baja después.</div>
+ </div>
+
+ <h3>Estrés y crisis</h3>
+ <div class="card gold">
+  <div class="row"><span>Estrés oral (fiebre, enfermedad intercurrente)</span><b>${fmt(d.hcS[0],1)}–${fmt(d.hcS[1],1)} mg/día</b></div>
+  <div class="row"><span>en 3–4 tomas</span><b>${per(d.hcS,4)} mg c/6 h</b></div>
+  <div class="row"><span><b>Bolo de crisis</b> (lactante)</span><b>25 mg IV/IM</b></div>
+  <div class="row"><span>alternativa 50–100 mg/m²</span><b>${fmt(d.boloBSA[0],1)}–${fmt(d.boloBSA[1],1)} mg</b></div>
+  <div class="row"><span>Luego 50–100 mg/m²/día IV</span><b>${per(d.hcIV,4)} mg c/6 h</b></div>
+  <div class="row"><span>Cirugía mayor</span><b>bolo en inducción + 50–100 mg/m²/día</b></div>
+ </div>
+ <div class="card alert">
+  <div class="row"><span>SSN 0,9 % 10–20 mL/kg</span><b>${fmt(d.ssn[0],0)}–${fmt(d.ssn[1],0)} mL</b></div>
+  <div class="row"><span>D10 % 2 mL/kg</span><b>${fmt(d.d10,1)} mL</b></div>
+  <div class="row"><span>Gluconato de calcio 10 % 0,5–1 mL/kg</span><b>${fmt(d.cagl[0],1)}–${fmt(d.cagl[1],1)} mL</b></div>
+  <div class="row"><span>Insulina regular 0,1 U/kg</span><b>${fmt(d.ins,2)} U + D10 % ${fmt(d.dex,0)} mL</b></div>
+  <div class="row"><span>NaCl 3 % si convulsiona (2–3 mL/kg)</span><b>${fmt(2*w,1)}–${fmt(3*w,1)} mL</b></div>
+ </div>
+
+ <h3>Preparación práctica</h3>
+ <div class="card teal small">
+  <p style="margin-top:0"><b>Hidrocortisona oral:</b> las suspensiones magistrales son inestables y dan dosis irregulares; las guías aconsejan no usarlas. Si solo hay tabletas de 10 mg: dispersar 1 tableta en 10 mL de agua (1 mg/mL) justo antes de la toma, agitar, medir con jeringa oral y desechar el resto. ${(()=>{const t=rq(d.hcM[1]/3);return `Para ${fmt(t,2)} mg → ${fmt(t,2)} mL de la dispersión.`})()} Donde existan, los gránulos de hidrocortisona de 0,5–1–2–5 mg dan dosis exactas en neonatos.</p>
+  <p style="margin-bottom:0"><b>Fludrocortisona:</b> tabletas de 0,1 mg; partir y triturar con un poco de leche. No se aumenta en estrés.</p>
+ </div>
+ <div class="flex" style="margin-top:12px"><button class="btn t" id="mkcard">Tarjeta de emergencia para la familia</button></div>
+ <div id="cardwrap"></div>`;
+ return h+DOSE_NOTES;
+}
+const DOSE_NOTES=`<details><summary>Fundamentos de las dosis</summary><div class="small">
+<ul class="clean"><li>Producción fisiológica de cortisol ≈ 6–8 mg/m²/día; 10–15 mg/m²/día por vía oral la cubren tras el primer paso hepático y frenan la ACTH. Dosis &gt;20 mg/m²/día sostenidas en la lactancia se asocian con menor talla.</li>
+<li>Equivalencias: 20 mg de hidrocortisona ≈ 0,1 mg de fludrocortisona en efecto mineralocorticoide; por eso la dosis IV alta no necesita fludrocortisona.</li>
+<li>Hidrocortisona, no prednisolona ni dexametasona, en lactantes y niños en crecimiento.</li>
+<li>ANZSPED 2025: RN enfermo → 25 mg IV/IM y 100 mg/m²/día; RN estable con HSC probable → 12–15 mg/m²/día y fludrocortisona 100–200 µg/día; sal desde que la alimentación esté establecida.</li></ul></div></details>`;
+
+function emergencyCard(){
+ const w=parseFloat(S.w), d=doses(w,parseFloat(S.l)); if(!d) return;
+ const name=($('#ecname')&&$('#ecname').value)||'';
+ const html=`<div class="ecard"><h3>⚠︎ Insuficiencia suprarrenal · Hiperplasia suprarrenal congénita</h3>
+ <p><b>Nombre:</b> ${esc(name)||'____________________'} &nbsp; <b>Peso:</b> ${fmt(w,2)} kg</p>
+ <p><b>Este bebé no produce cortisol.</b> Si vomita, no come, está muy dormido o tiene diarrea intensa puede entrar en shock en horas.</p>
+ <ul class="clean">
+  <li><b>Dosis diaria:</b> hidrocortisona ${fmt(rq(d.hcM[0]/3),2)}–${fmt(rq(d.hcM[1]/3),2)} mg cada 8 h (según indicación del endocrinólogo) · fludrocortisona ____ mg · sal ____</li>
+  <li><b>Fiebre o enfermedad:</b> dar el doble o el triple de hidrocortisona, cada 6–8 h, mientras dure y 24 h más.</li>
+  <li><b>Vómitos, no tolera la boca o está decaído:</b> <b>hidrocortisona 25 mg intramuscular</b> y ir a urgencias.</li>
+ </ul>
+ <p><b>Para el equipo de urgencias:</b> hidrocortisona 25 mg IV/IM de inmediato, luego ${fmt(rq(d.hcIV[0]/4),2)}–${fmt(rq(d.hcIV[1]/4),2)} mg c/6 h; SSN 0,9 % 20 mL/kg; glucosa y electrolitos. No esperar resultados.</p>
+ <p class="small">Contacto de endocrinología: ____________________</p></div>`;
+ $('#ecard').innerHTML=html;
+ $('#cardwrap').innerHTML=`<div class="card"><label class="f">Nombre (opcional)</label><input class="n" id="ecname" value="${esc(name)}"><div style="margin-top:10px">${html}</div><div class="flex" style="margin-top:10px"><button class="btn" id="prcard">Imprimir / PDF</button></div></div>`;
+}
+
+/* ============ 17-OHP ============ */
+function vOhp(){
+ const o=S.ohp;
+ const seg=(k,opts)=>`<div class="seg">${opts.map(([v,t])=>`<button data-ohp="${k}" data-v="${v}" class="${o[k]===v?'on':''}">${t}</button>`).join('')}</div>`;
+ let h=`<h2>Intérprete de 17-OHP</h2><p class="lede">Los cortes dependen del ensayo, la edad gestacional y la hora de la muestra. Esta herramienta lee su valor contra el corte de su laboratorio y ajusta la confianza según el contexto.</p>
+ <div class="card"><label class="f">Tipo de muestra</label>${seg('tipo',[['tam','Tamizaje (papel filtro)'],['ser','Sérica basal'],['acth','Sérica a 60 min post-ACTH']])}
+ <div class="grid2"><div><label class="f">Valor</label><input class="n" id="ov" inputmode="decimal" value="${esc(o.v||'')}"></div>
+ <div><label class="f">Unidad</label><select class="n" id="ou"><option value="ng"${o.u!=='nmol'?' selected':''}>ng/mL</option><option value="nmol"${o.u==='nmol'?' selected':''}>nmol/L</option></select></div></div>
+ ${o.tipo==='tam'?`<label class="f">Punto de corte de su laboratorio para este RN (misma unidad)</label><input class="n" id="oc" inputmode="decimal" placeholder="ver reporte del programa" value="${esc(o.c||'')}">`:''}
+ <div class="grid3"><div><label class="f">EG (sem)</label><input class="n" id="oeg" inputmode="numeric" value="${esc(o.eg||'')}"></div>
+ <div><label class="f">Peso (g)</label><input class="n" id="opn" inputmode="numeric" value="${esc(o.pn||'')}"></div>
+ <div><label class="f">Edad (h)</label><input class="n" id="oh" inputmode="numeric" value="${esc(o.h||'')}"></div></div>
+ <label class="f">Contexto</label>
+ <label class="chk"><input type="checkbox" data-oc="ster" ${o.ster?'checked':''}><span>Esteroides prenatales a la madre o hidrocortisona al RN</span></label>
+ <label class="chk"><input type="checkbox" data-oc="ill" ${o.ill?'checked':''}><span>RN enfermo o en estrés (VM, sepsis, hipotensión)</span></label>
+ <label class="chk"><input type="checkbox" data-oc="clin" ${o.clin?'checked':''}><span>Clínica compatible: 46,XX virilizada, hiperpigmentación, Na⁺↓/K⁺↑ o hipoglucemia</span></label>
+ <label class="f">2.º nivel por LC-MS/MS (si lo tiene)</label>
+ ${seg('df',[['pos','21-DF detectable/elevado'],['neg','21-DF indetectable'],['na','No disponible']])}
+ ${seg('rat',[['pos','Cociente (17-OHP+A4)/F alto'],['neg','Cociente normal'],['na','No disponible']])}
+ <button class="btn t" id="ogo" style="width:100%;margin-top:6px">Interpretar</button></div>
+ <div id="ores">${o.res||''}</div>
+ <details><summary>Conversiones y umbrales de referencia</summary><div class="small">
+ <ul class="clean"><li>1 ng/mL = 3,03 nmol/L · 100 ng/dL = 1 ng/mL.</li>
+ <li><b>Sérica basal en RN a término &gt;48 h (LC-MS/MS):</b> la forma clásica suele superar 300 nmol/L (≈100 ng/mL), a menudo con miles; valores &lt;10 nmol/L hacen improbable la forma clásica.</li>
+ <li><b>Post-ACTH a 60 min:</b> &gt;300 nmol/L (≈10 000 ng/dL) clásica; 30–300 nmol/L sugiere no clásica o heterocigosis compuesta leve; &lt;30 nmol/L no afectado. Cosintropina 0,125 mg en menores de 2 años (0,25 mg en mayores) según el protocolo local.</li>
+ <li><b>2.º nivel:</b> en Ontario (2025) un algoritmo de 3 componentes con 21-DF detectable (≥2,1 nmol/L) mejoró la detección de la forma perdedora de sal; en Países Bajos (2017–2019) los 37 casos confirmados tenían 21-DF elevado y los 33 falsos positivos lo tenían indetectable.</li></ul></div></details>`;
+ return h;
+}
+function interpOhp(){
+ const o=S.ohp; let v=parseFloat(o.v); if(!(v>0)) return `<div class="card small">Ingrese un valor.</div>`;
+ const nm=o.u==='nmol'?v:v*3.03, ng=nm/3.03;
+ const eg=parseFloat(o.eg), pn=parseFloat(o.pn), hh=parseFloat(o.h);
+ const prem=(eg&&eg<37)||(pn&&pn<2500), early=hh&&hh<24;
+ let cls='grey',title='',txt='',acts=[],flags=[];
+ if(prem) flags.push('Prematuro o bajo peso: valores fisiológicamente más altos.');
+ if(early) flags.push('Muestra antes de las 24 h: falsos positivos frecuentes.');
+ if(o.ill) flags.push('Estrés o enfermedad eleva la 17-OHP.');
+ if(o.ster) flags.push('Esteroides pueden suprimir la 17-OHP: riesgo de falso negativo.');
+ const df=o.df, rat=o.rat;
+ if(o.tipo==='acth'){
+  if(nm>300){cls='red';title='Compatible con HSC clásica';txt='17-OHP estimulada >300 nmol/L.';acts=['Tratar como forma clásica si no lo está','Genotipo CYP21A2','Endocrinología pediátrica'];}
+  else if(nm>=30){cls='gold';title='Rango de forma no clásica';txt='17-OHP estimulada 30–300 nmol/L: no clásica o heterocigosis compuesta leve; no da crisis neonatal.';acts=['Genotipo para definir','No requiere tratamiento neonatal si está asintomático','Seguimiento por endocrinología'];}
+  else {cls='green';title='Respuesta no afectada';txt='17-OHP estimulada <30 nmol/L.';acts=['HSC por 21-OHD improbable','Si persiste la sospecha, piense en otra causa (Diferencial)'];}
+ } else if(o.tipo==='ser'){
+  if(nm>300){cls='red';title='Muy sugestivo de HSC clásica';txt=`${fmt(nm,0)} nmol/L (${fmt(ng,1)} ng/mL).`;acts=['Iniciar tratamiento tras las muestras','Electrolitos, renina, genotipo','Si inestable → Ruta C'];}
+  else if(nm>=30){cls='gold';title='Elevada, indeterminada';txt=`${fmt(nm,0)} nmol/L: puede ser HSC, prematurez, estrés u otra enzima.`;acts=['Perfil de 2.º nivel (21-DF, 11-desoxicortisol, cociente)','Electrolitos cada 48–72 h','Prueba de ACTH si estable y persiste'];}
+  else if(nm>=10){cls='grey';title='Levemente elevada';txt='Más probable fisiológica o no clásica.';acts=['Repetir en 1–2 semanas','Vigilar electrolitos si hay dudas clínicas'];}
+  else {cls='green';title='Forma clásica improbable';txt=`${fmt(nm,1)} nmol/L.`;acts=['Si hay pérdida de sal con 17-OHP baja: AHC, PHA1, StAR (Diferencial)'];}
+ } else {
+  const c=parseFloat(o.c);
+  if(!(c>0)) return `<div class="card small">Para el tamizaje necesito el punto de corte de su laboratorio para este RN (estratificado por EG o peso).</div>`;
+  const cv=o.u==='nmol'?c:c*3.03, ratio=nm/cv;
+  if(ratio<1){cls='green';title='Tamizaje negativo';txt=`${fmt(ratio,2)}× el corte.`;acts=o.ster?['Repetir a las ~2 semanas por esteroides']:['Sin acción adicional salvo clínica']; }
+  else if(ratio<2){cls='grey';title='Positivo limítrofe';txt=`${fmt(ratio,2)}× el corte.`;acts=['Evaluar al RN y electrolitos','2.º nivel o repetir tarjeta','No tratar por el número si está estable'];}
+  else if(ratio<5){cls='gold';title='Positivo';txt=`${fmt(ratio,2)}× el corte.`;acts=['Ver al RN hoy (Ruta A)','17-OHP sérica, electrolitos, renina','2.º nivel si está disponible'];}
+  else {cls='red';title='Positivo alto: urgencia del mismo día';txt=`${fmt(ratio,2)}× el corte.`;acts=['Ver al RN hoy y tomar muestras','Iniciar tratamiento tras muestras si hay clínica o electrolitos alterados','Ruta A / C'];}
+  if((prem||o.ill||early)&&cls!=='green'&&!o.clin&&df!=='pos'){flags.push('El contexto baja el valor predictivo: priorice 2.º nivel o repetición antes de tratar a un RN estable.');}
+ }
+ if(df==='pos'){flags.push('21-DF detectable: fuerte apoyo a 21-OHD clásica (también se eleva en 11β-OHD; revise 11-desoxicortisol).'); if(cls!=='red'){cls='red';title=title+' · 2.º nivel positivo';}}
+ if(df==='neg'&&o.tipo!=='acth'){flags.push('21-DF indetectable: hace poco probable la forma clásica (excelente valor predictivo negativo en las series de 2.º nivel).'); if(cls==='gold'||cls==='grey'){cls='green';title='Probable falso positivo';acts=['Repetir tamizaje o 17-OHP sérica para documentar normalización','Vigilancia clínica'];}}
+ if(rat==='pos') flags.push('Cociente (17-OHP+A4)/F alto: apoya HSC.');
+ if(rat==='neg'&&df!=='pos') flags.push('Cociente normal: apoya falso positivo.');
+ if(o.clin){flags.push('Clínica compatible: la decisión de tratar no depende del número.'); if(cls==='green'||cls==='grey'){cls='gold';title+=' · pero con clínica compatible';acts.unshift('Tomar muestras y discutir inicio de tratamiento hoy');}}
+ const map={red:'v-red',gold:'v-gold',green:'v-green',grey:'v-grey'};
+ return `<div class="verdict ${map[cls]}"><h3>${title}</h3><div>${txt}</div><div class="out" style="margin-top:6px;opacity:.9">${fmt(nm,1)} nmol/L · ${fmt(ng,2)} ng/mL</div></div>
+ <div class="card"><h4 style="margin-top:0">Qué hacer</h4><ul class="clean">${acts.map(a=>`<li>${a}</li>`).join('')}</ul>
+ ${flags.length?`<h4>Matices</h4><ul class="clean">${flags.map(a=>`<li>${a}</li>`).join('')}</ul>`:''}
+ <div class="small">Las categorías orientan; el punto de corte, la técnica y el criterio del endocrinólogo mandan.</div></div>`;
+}
+
+/* ============ DIFERENCIAL ============ */
+/* gen: T típicos para el cariotipo, A atípicos/ambiguos, D completamente discordantes con el cariotipo
+   gon: P palpables, N no palpables · salt: L pérdida (Na↓K↑), N normal, H HTA/hipoK, K alcalosis con K↓ · o: H muy alta, M moderada, N normal/baja */
+const ENT=[
+{id:'21sw',n:'Déficit de 21-hidroxilasa · clásica perdedora de sal',gen:'CYP21A2',sx:['XX','XY'],g:{XX:['A','D'],XY:['T']},gon:{XX:['N'],XY:['P']},salt:['L'],o:['H'],fl:{hyper:2,mass:2,aldo:-4,prem:-1},
+ key:'17-OHP muy alta, 21-desoxicortisol elevado, renina alta con aldosterona baja; genotipo.',q:'¿17-OHP sérica >300 nmol/L con renina alta?'},
+{id:'21sv',n:'Déficit de 21-hidroxilasa · virilizante simple',gen:'CYP21A2 (I172N)',sx:['XX','XY'],g:{XX:['A','D'],XY:['T']},gon:{XX:['N'],XY:['P']},salt:['N'],o:['H'],fl:{hyper:1,aldo:-3},
+ key:'17-OHP alta con electrolitos y renina normales; en el varón suele diagnosticarse tarde.',q:'¿La renina se mantiene normal sin fludrocortisona?'},
+{id:'11b',n:'Déficit de 11β-hidroxilasa',gen:'CYP11B1',sx:['XX','XY'],g:{XX:['A','D'],XY:['T']},gon:{XX:['N'],XY:['P']},salt:['N','H','L'],o:['M','H'],fl:{aldo:-3},
+ key:'11-desoxicortisol y DOC elevados, renina suprimida; hipertensión e hipopotasemia suelen aparecer después del periodo neonatal (a veces pérdida de sal transitoria).',q:'¿El 11-desoxicortisol está muy elevado?'},
+{id:'3b',n:'Déficit de 3β-HSD tipo 2',gen:'HSD3B2',sx:['XX','XY'],g:{XX:['T','A'],XY:['A']},gon:{XX:['N'],XY:['P']},salt:['L','N'],o:['M'],fl:{hyper:1},
+ key:'17-OH-pregnenolona y DHEA elevadas, cociente Δ5/Δ4 alto; la 17-OHP sube por conversión periférica y puede dar tamizaje positivo.',q:'¿El cociente 17-OH-pregnenolona/17-OHP está alto?'},
+{id:'por',n:'Déficit de P450 oxidorreductasa (POR)',gen:'POR',sx:['XX','XY'],g:{XX:['A'],XY:['A','T']},gon:{XX:['N'],XY:['P']},salt:['N'],o:['M','H'],fl:{skel:5,matvir:3},
+ key:'Perfil mixto (21 y 17α), malformaciones tipo Antley-Bixler, virilización materna en el embarazo; electrolitos usualmente normales.',q:'¿Hay craneosinostosis, sinostosis radiohumeral o la madre se virilizó?'},
+{id:'17a',n:'Déficit de 17α-hidroxilasa/17,20-liasa',gen:'CYP17A1',sx:['XX','XY'],g:{XX:['T'],XY:['D','A']},gon:{XX:['N'],XY:['P','N']},salt:['H','N'],o:['N'],fl:{aldo:-2},
+ key:'DOC y corticosterona altos, renina suprimida, cortisol y andrógenos bajos; 17-OHP baja (el tamizaje no lo detecta).',q:'¿Corticosterona alta con 17-OHP baja?'},
+{id:'star',n:'Hiperplasia lipoidea (StAR) / déficit de CYP11A1',gen:'STAR · CYP11A1',sx:['XX','XY'],g:{XX:['T'],XY:['D','A']},gon:{XX:['N'],XY:['P','N']},salt:['L'],o:['N'],fl:{hyper:3,mass:2},
+ key:'Todos los esteroides bajos con ACTH y renina muy altas; en StAR suprarrenales grandes cargadas de lípidos.',q:'¿Todos los esteroides suprarrenales están bajos?'},
+{id:'ahc',n:'Hipoplasia suprarrenal congénita ligada al X',gen:'NR0B1 (DAX1)',sx:['XY'],g:{XY:['T']},gon:{XY:['P']},salt:['L'],o:['N'],fl:{hyper:3,famx:5},
+ key:'Cortisol bajo, ACTH muy alta, 17-OHP baja, suprarrenales pequeñas; varones de la línea materna afectados; luego hipogonadismo hipogonadotrópico.',q:'¿Hay varones de la línea materna con muerte o insuficiencia suprarrenal en la lactancia?'},
+{id:'pha',n:'Seudohipoaldosteronismo tipo 1 (primario o secundario)',gen:'NR3C2 · SCNN1A/B/G',sx:['XX','XY'],g:{XX:['T'],XY:['T']},gon:{XX:['N'],XY:['P']},salt:['L'],o:['N'],fl:{aldo:6,uro:4},
+ key:'Aldosterona y renina muy altas con cortisol normal; descartar ITU y uropatía obstructiva (forma transitoria secundaria).',q:'¿Aldosterona muy alta con cortisol normal?'},
+{id:'hem',n:'Hemorragia suprarrenal bilateral',gen:'adquirida',sx:['XX','XY'],g:{XX:['T'],XY:['T']},gon:{XX:['N'],XY:['P']},salt:['L','N'],o:['N'],fl:{mass:4,trauma:4},
+ key:'Masa suprarrenal en ecografía que evoluciona a quística, anemia, ictericia; parto traumático, macrosomía o asfixia.',q:'¿La ecografía muestra una masa suprarrenal que cambia en días?'},
+{id:'pil',n:'Estenosis hipertrófica del píloro',gen:'adquirida',sx:['XX','XY'],g:{XX:['T'],XY:['T']},gon:{XX:['N'],XY:['P']},salt:['K','N'],o:['N'],fl:{},
+ key:'Alcalosis metabólica hipoclorémica con K⁺ bajo: el opuesto bioquímico de la crisis suprarrenal; ecografía pilórica.',q:'¿El K⁺ está bajo y el pH alcalino?'},
+{id:'trans',n:'Elevación transitoria de 17-OHP (prematurez, estrés)',gen:'fisiológica',sx:['XX','XY'],g:{XX:['T'],XY:['T']},gon:{XX:['N'],XY:['P']},salt:['N','L'],o:['M','H'],fl:{prem:5,aldo:-1},
+ key:'21-desoxicortisol indetectable, cociente normal, normalización al repetir.',q:'¿El 21-DF es indetectable y la 17-OHP baja al repetir?'},
+{id:'mat',n:'Andrógenos maternos o déficit de aromatasa placentaria',gen:'CYP19A1 · luteoma · tumor',sx:['XX'],g:{XX:['A','D']},gon:{XX:['N']},salt:['N'],o:['N'],fl:{matvir:6},
+ key:'Virilización materna durante el embarazo (acné, hirsutismo, voz grave), andrógenos maternos altos; 17-OHP del RN normal.',q:'¿La madre se virilizó durante el embarazo?'},
+{id:'ovo',n:'DSD 46,XX testicular u ovotesticular',gen:'SRY+ · SOX9 · SOX3 · RSPO1',sx:['XX'],g:{XX:['A','D']},gon:{XX:['P']},salt:['N'],o:['N'],fl:{},
+ key:'Gónadas palpables en un 46,XX, AMH e inhibina B detectables (tejido testicular), SRY por FISH.',q:'¿Hay gónadas palpables y AMH detectable en un 46,XX?'}
+];
+const FLAGS=[['hyper','Hiperpigmentación (escroto, labios, areolas, encías)'],['skel','Malformaciones esqueléticas o craneosinostosis'],['matvir','Virilización materna en el embarazo'],['mass','Suprarrenal grande o masa en la ecografía'],['aldo','Aldosterona muy alta con cortisol normal'],['uro','ITU o uropatía obstructiva'],['trauma','Parto traumático, macrosomía o asfixia'],['prem','Prematuro <32 sem o RN crítico'],['famx','Varones de la línea materna afectados']];
+
+function scoreEnt(e,D){
+ const sexes=D.k?[D.k]:e.sx; let best=null;
+ for(const s of sexes){
+  if(!e.sx.includes(s)) continue;
+  let sc=0,pro=[],con=[];
+  if(D.k){sc+=1;}
+  if(D.g){ if(e.g[s].includes(D.g)){sc+=e.g[s].length>1?1.5:2.5;pro.push('genitales');} else {sc-=3;con.push('genitales');}}
+  if(D.gon){ if(e.gon[s].includes(D.gon)){sc+=1;pro.push('gónadas');} else {sc-=2;con.push('gónadas');}}
+  if(D.salt){ if(e.salt.includes(D.salt)){sc+=e.salt.length>2?1:2.5;pro.push('electrolitos');} else {sc-=3;con.push('electrolitos');}}
+  if(D.o){ if(e.o.includes(D.o)){sc+=e.o.length>1?2:3;pro.push('17-OHP');} else {sc-=3;con.push('17-OHP');}}
+  for(const [f,lab] of FLAGS){ if(D.f[f]){const v=e.fl[f]||0; sc+=v; if(v>0)pro.push(lab.split(' (')[0].toLowerCase()); if(v<0)con.push(lab.split(' (')[0].toLowerCase());}}
+  if(!best||sc>best.sc) best={sc,pro,con,s};
+ }
+ if(!best) return {sc:-99,pro:[],con:['cariotipo'],s:D.k};
+ return best;
+}
+function vDdx(){
+ const D=S.ddx;
+ const seg=(k,opts)=>`<div class="seg">${opts.map(([v,t])=>`<button data-dd="${k}" data-v="${v}" class="${D[k]===v?'on':''}">${t}</button>`).join('')}</div>`;
+ let h=`<h2>Diagnóstico diferencial</h2><p class="lede">Arquitectura pluralista: el motor no busca una respuesta sino un ranking con lo que apoya y lo que contradice cada hipótesis, y la pregunta que mejor las separa.</p>
+ <div class="card">
+ <label class="f">Cariotipo</label>${seg('k',[['','Desconocido'],['XX','46,XX'],['XY','46,XY']])}
+ <label class="f">Genitales externos</label>${seg('g',[['','Sin dato'],['T','Típicos'],['A','Atípicos'],['D','Opuestos al cariotipo']])}
+ <label class="f">Gónadas</label>${seg('gon',[['','Sin dato'],['P','Palpables'],['N','No palpables']])}
+ <label class="f">Electrolitos / PA</label>${seg('salt',[['','Sin dato'],['L','Na⁺↓ K⁺↑'],['N','Normales'],['H','HTA o K⁺↓'],['K','Alcalosis, Cl⁻↓, K⁺↓']])}
+ <label class="f">17-OHP</label>${seg('o',[['','Sin dato'],['H','Muy alta'],['M','Moderada'],['N','Normal o baja']])}
+ <label class="f">Otros hallazgos</label>
+ ${FLAGS.map(([f,l])=>`<label class="chk"><input type="checkbox" data-df="${f}" ${D.f[f]?'checked':''}><span>${l}</span></label>`).join('')}
+ <div class="flex" style="margin-top:8px"><button class="btn l" id="ddreset">Limpiar</button></div></div>`;
+ const any=D.k||D.g||D.gon||D.salt||D.o||Object.values(D.f).some(Boolean);
+ if(!any) return h+`<div class="card small">Marque al menos un dato para ordenar las hipótesis.</div>`+PATTERN;
+ const R=ENT.map(e=>({e,...scoreEnt(e,D)})).filter(x=>x.sc>-50).sort((a,b)=>b.sc-a.sc);
+ const top=R.length?R[0].sc:0;
+ h+=`<h3>Hipótesis ordenadas</h3>`;
+ R.slice(0,7).forEach((x,i)=>{
+  const pct=Math.max(4,Math.min(100,top>0?(x.sc/top)*100:0));
+  h+=`<div class="card"><div class="flex" style="justify-content:space-between"><b>${i+1}. ${x.e.n}</b><span class="pill ${i===0?'red':''} mono">${fmt(x.sc,1)}</span></div>
+  <div class="small mono">${x.e.gen}</div><div class="bar"><i style="width:${pct}%"></i></div>
+  ${x.pro.length?`<div class="small"><span class="pill green">a favor</span>${x.pro.join(' · ')}</div>`:''}
+  ${x.con.length?`<div class="small"><span class="pill red">en contra</span>${x.con.join(' · ')}</div>`:''}
+  <div class="small" style="margin-top:6px"><b>Clave:</b> ${x.e.key}</div>
+  <div class="q small"><b>Pregunta discriminante:</b> ${x.e.q}</div></div>`;
+ });
+ if(R.length>1&&R[0].sc-R[1].sc<2) h+=`<div class="card gold small">Las dos primeras hipótesis están casi empatadas: no converja todavía. Use la pregunta discriminante de cada una.</div>`;
+ return h+PATTERN;
+}
+const PATTERN=`<details><summary>Tabla de patrones hormonales</summary><div class="scroll"><table class="t">
+<tr><th>Defecto</th><th>46,XX</th><th>46,XY</th><th>Sal</th><th>Marcador</th></tr>
+<tr><td>21-OH</td><td>Virilizada</td><td>Típico</td><td>Pérdida (clásica)</td><td>17-OHP, 21-DF ↑↑</td></tr>
+<tr><td>11β-OH</td><td>Virilizada</td><td>Típico</td><td>HTA tardía</td><td>11-desoxicortisol, DOC ↑</td></tr>
+<tr><td>3β-HSD2</td><td>Leve</td><td>Subvirilizado</td><td>Pérdida</td><td>17-OH-Preg, DHEA ↑</td></tr>
+<tr><td>POR</td><td>Virilizada</td><td>Variable</td><td>Normal</td><td>Mixto + esqueleto</td></tr>
+<tr><td>17α-OH</td><td>Típico</td><td>Fenotipo femenino</td><td>HTA, K⁺↓</td><td>DOC, corticosterona ↑</td></tr>
+<tr><td>StAR/CYP11A1</td><td>Típico</td><td>Fenotipo femenino</td><td>Pérdida grave</td><td>Todo ↓, ACTH ↑↑</td></tr>
+<tr><td>AHC (DAX1)</td><td>—</td><td>Típico</td><td>Pérdida</td><td>Cortisol ↓, 17-OHP ↓</td></tr>
+<tr><td>PHA1</td><td>Típico</td><td>Típico</td><td>Pérdida</td><td>Aldosterona ↑↑</td></tr>
+</table></div></div></details>`;
+
+/* ============ GENITALES ============ */
+const PRADER=[
+ ['I','Clitoromegalia aislada; labios sin fusión.'],
+ ['II','Clitoromegalia con fusión labial posterior parcial; vestíbulo en embudo con orificios uretral y vaginal todavía separables.'],
+ ['III','Falo mayor, fusión labioescrotal casi completa, seno urogenital único en el periné.'],
+ ['IV','Falo de aspecto peneano, fusión completa, orificio único en la base del falo (seno urogenital).'],
+ ['V','Aspecto masculino completo con meato en el glande y "escroto" vacío: puede confundirse con un varón con criptorquidia bilateral.']];
+const EMSI=[
+ ['fus','Fusión labioescrotal',[['Sí',3],['No',0]]],
+ ['mic','Micropene (<2,5 cm de longitud estirada a término)',[['No',3],['Sí',0]]],
+ ['mea','Meato uretral',[['Normal (glande)',3],['Distal',2],['Medio',1],['Proximal o perineal',0]]],
+ ['gd','Gónada derecha',[['Escrotal/labial',1.5],['Inguinal',1],['No palpable',0.5],['Ausente',0]]],
+ ['gi','Gónada izquierda',[['Escrotal/labial',1.5],['Inguinal',1],['No palpable',0.5],['Ausente',0]]]];
+function vGenit(){
+ const E=S.ems; let tot=0,done=0;
+ EMSI.forEach(([k])=>{if(E[k]!==undefined){tot+=E[k];done++;}});
+ let h=`<h2>Genitales</h2><p class="lede">Describir con precisión es la primera intervención terapéutica: evita asignar sexo antes de tiempo y orienta los estudios.</p>
+ <h3>Puntaje de masculinización externa (EMS)</h3><div class="card">`;
+ EMSI.forEach(([k,lab,opts])=>{h+=`<label class="f">${lab}</label><div class="seg">${opts.map(([t,v])=>`<button data-ems="${k}" data-v="${v}" class="${E[k]===v?'on':''}">${t}</button>`).join('')}</div>`;});
+ h+=`<div class="hr"></div><div class="flex" style="justify-content:space-between"><div><div class="t-tag">EMS</div><div class="big">${done?fmt(tot,1):'—'}<span style="font-size:16px;color:var(--mute)"> / 12</span></div></div>
+ <div class="small" style="max-width:60%;text-align:right">${done<5?'Complete los 5 ítems.':tot>=11?'Rango del varón típico; investigar igual si hay otro hallazgo de la lista.':'EMS bajo: requiere evaluación por DSD (cariotipo, ecografía, perfil hormonal).'}</div></div></div>
+ <h3>Estadios de Prader (46,XX virilizada)</h3>`;
+ PRADER.forEach(([n,t])=>{h+=`<div class="card"><div class="flex"><span class="case-n" style="font-size:30px;width:44px">${n}</span><span>${t}</span></div></div>`;});
+ h+=`<h3>Cuándo investigar un DSD</h3><div class="card"><ul class="clean">
+ <li>Genitales ambiguos evidentes.</li>
+ <li>Aparente niña con clitoromegalia, fusión labial posterior o masa inguinal o labial.</li>
+ <li>Aparente varón con testículos no palpables bilaterales, micropene aislado, hipospadias perineal aislado, o hipospadias leve con testículo no descendido.</li>
+ <li>Antecedente familiar de DSD o de muertes neonatales inexplicadas; discordancia con el cariotipo prenatal.</li></ul>
+ <div class="small">Society for Endocrinology UK 2021; consenso global de DSD 2016.</div></div>`;
+ return h;
+}
+
+/* ============ SEGUIMIENTO ============ */
+function vSegui(){
+ return `<h2>Seguimiento y horizonte</h2><p class="lede">El objetivo no es normalizar la 17-OHP: es un niño que crece bien, sin crisis, sin virilización progresiva y sin exceso de glucocorticoide.</p>
+ <h3>Control</h3><div class="card"><table class="t">
+ <tr><th>Qué</th><th>Meta</th></tr>
+ <tr><td>17-OHP y androstenediona</td><td>En la mañana, antes de la dosis, con horario constante. 17-OHP moderadamente elevada es aceptable; normal o suprimida indica sobretratamiento. Androstenediona en rango para edad y sexo.</td></tr>
+ <tr><td>Renina</td><td>Normal-alta. Alta: falta fludrocortisona o sal. Suprimida con PA alta: exceso.</td></tr>
+ <tr><td>Crecimiento</td><td>Peso, talla y velocidad de crecimiento en cada visita; cuidado con dosis &gt;20 mg/m²/día en la lactancia.</td></tr>
+ <tr><td>PA</td><td>En cada control (fludrocortisona).</td></tr>
+ <tr><td>Frecuencia</td><td>Cada 3 meses el primer año (más tras ajustes); edad ósea anual a partir de los ~2 años.</td></tr></table></div>
+ <h3>Reglas de estrés en casa</h3><div class="card gold"><ul class="clean">
+ <li>Fiebre ≥38 °C, infección o vacuna con fiebre: doble o triple de hidrocortisona, cada 6–8 h, mientras dure y 24 h más.</li>
+ <li>Vómitos, no tolera la boca, diarrea intensa o letargia: hidrocortisona 25 mg IM y urgencias.</li>
+ <li>La fludrocortisona no se duplica en el estrés.</li>
+ <li>Vacunación completa según el esquema; no está contraindicada.</li>
+ <li>Kit en casa: vial de hidrocortisona 100 mg, jeringa y aguja, tarjeta de emergencia.</li></ul></div>
+ <h3>Lo nuevo y lo que aún no aplica al neonato</h3>
+ <div class="card"><b>Crinecerfont</b> <span class="pill teal">antagonista del receptor CRF1</span>
+ <p class="small">Aprobado por la FDA en diciembre de 2024 como coadyuvante del glucocorticoide para controlar los andrógenos en la HSC clásica de adultos y niños de 4 años o más (CAHtalyst; NEJM 2024). Los datos pediátricos a 2 años, presentados en mayo de 2026, muestran control hormonal sostenido con menor dosis de glucocorticoide; la talla final aún no se conoce. En julio de 2026 empezó un estudio de fase 2 en niños de 3 meses a menos de 4 años, y en Europa otro desde el nacimiento hasta los 2 años. <b>No hay indicación neonatal:</b> el pilar sigue siendo hidrocortisona, fludrocortisona y sal.</p></div>
+ <div class="card"><b>Dexametasona prenatal</b> <span class="pill red">experimental</span>
+ <p class="small">Puede reducir la virilización de fetos 46,XX afectados, pero expone a 7 de cada 8 embarazos tratados sin beneficio y tiene dudas de seguridad a largo plazo. La Endocrine Society la considera experimental y solo aceptable dentro de protocolos aprobados por comités de ética. El ensayo europeo PREDICT (2024–2031) compara 7,5 frente a 20 µg/kg/día y añade diagnóstico genético fetal en sangre materna para no tratar fetos no afectados.</p></div>
+ <div class="card"><b>Tamizaje de 2.º nivel</b> <span class="pill gold">implementación</span>
+ <p class="small">El perfil por LC-MS/MS con 21-desoxicortisol en la misma tarjeta reduce falsos positivos y acorta la derivación; varios programas (Países Bajos, Victoria, Ontario, Turquía) lo han adoptado o validado entre 2021 y 2025. Si su programa no lo ofrece, la repetición de la tarjeta y la 17-OHP sérica siguen siendo la alternativa.</p></div>
+ <h3>Consejo genético</h3><div class="card small">Herencia autosómica recesiva: 25 % de recurrencia en cada embarazo. Ofrecer genotipo a los padres y diagnóstico prenatal o preimplantacional en embarazos futuros; avisar al equipo obstétrico para tamizar y evaluar al próximo RN desde el día 1.</div>`;
+}
+
+/* ============ CASOS ============ */
+const CASES=[
+{n:1,t:'El varón que nadie miró',tags:['crisis','varón 46,XY'],h:`RN masculino de 39 semanas, 3 400 g, genitales típicos, alta a las 36 h. La tarjeta de tamizaje se tomó a las 30 h; el resultado no ha llegado. <b>Día 11:</b> dos días de vómitos y rechazo del pecho. Peso 2 900 g (−15 %). Letárgico, llenado capilar 4 s, PA 50/28, FC 190. Escroto hiperpigmentado. Na⁺ 117, K⁺ 8,2, Cl⁻ 86 mEq/L; pH 7,21, HCO₃⁻ 13; glucosa 38 mg/dL; urea 58 mg/dL. ECG: ondas T picudas.`,
+ qs:[['¿Qué hace en los primeros 15 minutos?','Acceso IV/IO; una muestra de suero si no retrasa (electrolitos, 17-OHP, cortisol, ACTH, renina, aldosterona, suero guardado) y hemocultivo. <b>Hidrocortisona 25 mg IV</b> sin esperar resultados. SSN 0,9 % 20 mL/kg (58 mL) y reevaluar. D10 % 2 mL/kg (≈6 mL) por la glucosa de 38. Por las T picudas, gluconato de calcio 10 % 0,5–1 mL/kg en 10 min con monitor. Antibióticos empíricos hasta descartar sepsis.'],
+  ['¿Inicia fludrocortisona hoy?','No mientras reciba 50–100 mg/m²/día IV: a esa dosis la hidrocortisona tiene efecto mineralocorticoide suficiente. Se agrega al bajar la hidrocortisona por debajo de ≈50 mg/m²/día, junto con NaCl oral.'],
+  ['El Na⁺ sube a 129 a las 6 h. ¿Problema?','Sí: 12 mEq/L en 6 h excede el límite de 8–10 mEq/L en 24 h para una hiponatremia que lleva días. Reducir el aporte de sodio, considerar agua libre y medir cada 2 h.'],
+  ['¿Qué diferencial descarta la bioquímica?','La estenosis pilórica da alcalosis hipoclorémica con K⁺ bajo, lo contrario. Siguen abiertos sepsis, seudohipoaldosteronismo (ITU, uropatía) e hipoplasia suprarrenal congénita, que se separan por 17-OHP, aldosterona y cortisol.']],
+ res:'17-OHP sérica inicial: 486 nmol/L. Genotipo CYP21A2: deleción/conversión en ambos alelos. HSC clásica perdedora de sal.',
+ learn:['En el varón la crisis suele ser la primera manifestación: genitales típicos no tranquilizan.','La hiperpigmentación escrotal es una pista discreta y valiosa.','El K⁺ casi siempre cae con hidrocortisona y SSN; el peligro real de los primeros días es corregir el Na⁺ demasiado rápido.']},
+{n:2,t:'Prader IV, gónadas no palpables',tags:['DSD','46,XX'],h:`RN de término, 3 100 g. Falo de 2,2 cm, fusión labioescrotal completa con piel rugosa, orificio único en la base del falo, <b>gónadas no palpables</b>. Sin dismorfias. PA normal. La madre pregunta: "¿es niño o niña?".`,
+ qs:[['¿Qué contesta y qué no hace?','Que los genitales del bebé no permiten saberlo todavía y que en pocos días habrá respuesta; que lo primero es asegurar que esté sano. No asignar sexo, no adivinar, no usar "hermafrodita". Un solo vocero del equipo.'],
+  ['Calcule el EMS.','Fusión sí (3) + micropene sí (0) + meato proximal/perineal (0) + gónadas no palpables (0,5 + 0,5) = <b>4/12</b>. EMS bajo: evaluación de DSD completa.'],
+  ['¿Cuál es el diagnóstico de trabajo y qué vigila desde ya?','Virilización con gónadas no palpables = HSC 46,XX hasta demostrar lo contrario. Vigilar sal: electrolitos al día 3 y cada 48 h, peso diario, glucosa.'],
+  ['Cariotipo 46,XX, SRY negativo; útero presente; suprarrenales grandes. 17-OHP a las 48 h: 312 ng/mL. Na⁺ 134, K⁺ 6,1 al día 4. ¿Trata?','Sí. 312 ng/mL ≈ 945 nmol/L confirma HSC clásica, y el Na⁺ en descenso con K⁺ en ascenso anuncia la pérdida de sal. Tras guardar suero y EDTA: hidrocortisona 10–15 mg/m²/día (algunos inician 20–25 por pocos días), fludrocortisona 0,1–0,2 mg/día y NaCl 1–2 g/día.']],
+ res:'HSC clásica perdedora de sal, 46,XX, Prader IV.',
+ learn:['La cirugía genital no es urgente; la sal sí.','Electrolitos normales al día 3 no descartan la forma perdedora de sal: la caída suele llegar en la 2.ª semana.','La mayoría de las personas 46,XX con HSC se identifica como mujer y tiene útero y ovarios funcionales, información útil para la familia dentro de una decisión compartida.']},
+{n:3,t:'El número que miente',tags:['prematuro','falso positivo'],h:`RN femenina de 29 semanas, 1 150 g. Betametasona prenatal completa. Ventilación mecánica y dopamina los primeros 3 días. Genitales femeninos típicos. Tamizaje al día 3: 17-OHP 85 ng/mL; el corte del laboratorio para &lt;1 500 g es 60 ng/mL. Na⁺ 131 (recibe furosemida), K⁺ 5,4.`,
+ qs:[['¿Inicia hidrocortisona por el tamizaje?','No. 1,4 veces el corte en una prematura de 29 semanas estresada, sin virilización ni electrolitos sugestivos, es con mayor probabilidad un falso positivo. El Na⁺ de 131 se explica por la pérdida renal del prematuro y la furosemida.'],
+  ['¿Qué pide?','2.º nivel por LC-MS/MS en la misma tarjeta (21-desoxicortisol y cociente (17-OHP + A4)/cortisol). Si no existe, repetir la tarjeta a las ~2 semanas y/o 17-OHP sérica por LC-MS/MS.'],
+  ['La betametasona, ¿cambia algo?','Sí, en la otra dirección: puede suprimir la 17-OHP y esconder una HSC verdadera. Por eso el tamizaje del prematuro expuesto a esteroides se repite aunque el primero sea normal.'],
+  ['Al día 6 desarrolla hipotensión refractaria a dopamina y epinefrina. ¿Hidrocortisona?','Sí, por insuficiencia suprarrenal relativa del prematuro, con una muestra de suero tomada antes. Al iniciarla, anotar en la solicitud que recibe hidrocortisona, porque altera la interpretación de cualquier 17-OHP posterior.']],
+ res:'21-DF indetectable, cociente normal. A los 15 días: 17-OHP 18 ng/mL, por debajo del corte. Falso positivo.',
+ learn:['La mayoría de los tamizajes positivos en prematuros son falsos positivos.','El 21-desoxicortisol es el marcador que mejor separa a la HSC del estrés.','Tratar la hipotensión refractaria es una decisión distinta de diagnosticar HSC.']},
+{n:4,t:'Sal sin 17-OHP',tags:['anticonvergencia','46,XY'],h:`Lactante masculino de 3 semanas, genitales típicos, testículos en bolsa. Vómitos y poca ganancia de peso; hiperpigmentación generalizada, incluida la mucosa oral. Na⁺ 121, K⁺ 7,4; glucosa 40 mg/dL. Tamizaje neonatal: 17-OHP normal. Antecedente: un hermano de la madre murió a los 2 meses "por deshidratación".`,
+ qs:[['¿Lo trata como crisis suprarrenal aunque la 17-OHP sea normal?','Sí. La crisis se define por la clínica y los electrolitos, no por la 17-OHP. Muestras, hidrocortisona 25 mg IV, SSN y dextrosa como en la Ruta C.'],
+  ['Cortisol 2 µg/dL, ACTH 1 850 pg/mL, renina muy alta, aldosterona baja, 17-OHP baja; suprarrenales pequeñas en la ecografía. ¿Qué piensa?','Insuficiencia suprarrenal primaria sin bloqueo de 21-hidroxilasa. Con la historia de un tío materno fallecido: <b>hipoplasia suprarrenal congénita ligada al X (NR0B1/DAX1)</b>. Diferenciales: hiperplasia lipoidea (StAR) en un 46,XY con genitales típicos sería rara; seudohipoaldosteronismo tiene aldosterona alta y cortisol normal.'],
+  ['¿Cambia el tratamiento?','No en lo agudo ni en el mantenimiento: hidrocortisona, fludrocortisona y sal. Sí cambian el consejo genético (madre portadora, 50 % de los hijos varones afectados) y el seguimiento: hipogonadismo hipogonadotrópico en la pubertad.']],
+ res:'Variante patogénica hemicigota en NR0B1. Madre portadora.',
+ learn:['El tamizaje de 17-OHP no detecta todas las insuficiencias suprarrenales neonatales.','Ante pérdida de sal con 17-OHP baja: AHC, StAR/CYP11A1, PHA1 y hemorragia suprarrenal.','La historia familiar por línea materna es una herramienta diagnóstica gratuita.']}
+];
+function vCasos(){
+ let h=`<h2>Casos clínicos</h2><p class="lede">Cuatro casos para la ronda y la docencia. Responda antes de abrir cada respuesta.</p>`;
+ CASES.forEach((c,ci)=>{
+  h+=`<details ${ci===0?'open':''}><summary><span class="case-h"><span class="case-n">${c.n}</span><span>${c.t}<br>${c.tags.map(t=>`<span class="pill">${t}</span>`).join('')}</span></span></summary><div>
+  <div class="card" style="margin-top:0">${c.h}</div>`;
+  c.qs.forEach((q,qi)=>{h+=`<div class="q"><b>${qi+1}. ${q[0]}</b><button class="reveal" data-ans="a${ci}_${qi}">Ver respuesta</button><div class="ans" id="a${ci}_${qi}">${q[1]}</div></div>`;});
+  h+=`<div class="card gold"><b>Desenlace:</b> ${c.res}</div><div class="card teal"><b>Para llevarse</b><ul class="clean">${c.learn.map(l=>`<li>${l}</li>`).join('')}</ul></div></div></details>`;
+ });
+ return h;
+}
+
+/* ============ REFERENCIAS ============ */
+function vRefs(){
+ const R=[
+ 'Speiser PW, Arlt W, Auchus RJ, et al. Congenital adrenal hyperplasia due to steroid 21-hydroxylase deficiency: an Endocrine Society clinical practice guideline. J Clin Endocrinol Metab. 2018;103(11):4043–4088.',
+ 'Claahsen-van der Grinten HL, Speiser PW, Ahmed SF, et al. Congenital adrenal hyperplasia — current insights in pathophysiology, diagnostics, and management. Endocr Rev. 2022;43(1):91–159.',
+ 'ANZSPED. The initial management and stabilisation of the newborn infant with a positive screen for congenital adrenal hyperplasia. Guía corta y completa, marzo 2025.',
+ 'Clinical manifestations and treatment challenges in infants and children with classic CAH due to 21-hydroxylase deficiency. J Clin Endocrinol Metab. 2025;110(Suppl 1):S13–S24.',
+ 'Yang M, White PC. Genetics and pathophysiology of classic CAH due to 21-hydroxylase deficiency. J Clin Endocrinol Metab. 2025;110(Suppl 1):S1–S12.',
+ 'Eitel KB, Fechner PY. Barriers to the management of classic CAH due to 21-hydroxylase deficiency. J Clin Endocrinol Metab. 2025;110(Suppl 1):S67–S73.',
+ 'Newborn screening of the endocrine system: best practices for evaluation of hypothyroidism and CAH. Clin Perinatol. 2025;52(3):495–508.',
+ 'Turkish Society for Pediatric Endocrinology and Diabetes, Adrenal Working Group. Treatment and follow-up of CAH due to 21-hydroxylase deficiency in childhood and adolescence. J Clin Res Pediatr Endocrinol. 2025;17(Suppl 1):12–22.',
+ 'The first-year outcomes of the nationwide neonatal CAH screening in Türkiye. J Clin Res Pediatr Endocrinol. 2025;17(4):488–493.',
+ 'Henderson MPA, et al. Improved performance of newborn screening for CAH using 21-deoxycortisol measurement. J Endocr Soc. 2025;bvaf157.',
+ 'Stroek K, et al. Second-tier testing for 21-hydroxylase deficiency in the Netherlands: a newborn screening pilot study. J Clin Endocrinol Metab. 2021;106(11):e4487–e4496.',
+ 'Greaves RF, et al. Best practice for identification of classical 21-hydroxylase deficiency should include 21-deoxycortisol analysis with appropriate isomeric steroid separation. Int J Neonatal Screen. 2023;9(4):58.',
+ 'Sarafoglou K, Kim MS, Lodish M, et al. Phase 3 trial of crinecerfont in pediatric congenital adrenal hyperplasia. N Engl J Med. 2024;391(6):493–503.',
+ 'Auchus RJ, Hamidi O, Pivonello R, et al. Phase 3 trial of crinecerfont in adult congenital adrenal hyperplasia. N Engl J Med. 2024;391(6):504–514.',
+ 'CAHtalyst Pediatric, extensión abierta a 2 años. Pediatric Endocrine Society, mayo 2026. Inicio de fase 2 en 3 meses–<4 años, julio 2026.',
+ 'Neumann U, et al. PREDICT: reduced prenatal dexamethasone dose in CAH. ESPE 2024 (Horm Res Paediatr 98, RFC8.1); EU CT 2024-511702-23-00.',
+ 'Ahmed SF, Achermann J, Alderson J, et al. Society for Endocrinology UK guidance on the initial evaluation of a suspected difference or disorder of sex development (revised 2021). Clin Endocrinol. 2021;95(6):818–840.',
+ 'Lee PA, Nordenström A, Houk CP, et al. Global disorders of sex development update since 2006. Horm Res Paediatr. 2016;85(3):158–180.'];
+ return `<h2>Evidencia</h2><p class="lede">Revisado el 8 de noviembre de 2026. Lo que cambió desde la guía de 2018: tamizaje de 2.º nivel con 21-desoxicortisol, guía neonatal de ANZSPED 2025, suplemento de JCEM 2025, crinecerfont (≥4 años) y el ensayo PREDICT de dexametasona prenatal.</p>
+ <div class="card"><ol style="padding-left:20px;margin:0;font-size:13.5px">${R.map(x=>`<li style="margin:6px 0">${x}</li>`).join('')}</ol></div>
+ <div class="card alert small"><b>Advertencia.</b> Herramienta de apoyo a la decisión clínica para profesionales. Las dosis y umbrales deben verificarse con el protocolo local, el laboratorio y endocrinología pediátrica. No sustituye el juicio clínico.</div>
+ <div class="foot">Dr. Jano Jaramillo — Médico Pediatra y Neonatólogo · Posgrado en Trastornos del Aprendizaje<br>Sala de Neonatología · Hospital Dr. Cecilio Castillero · Chitré, Panamá · HSC Neo v1.0</div>`;
+}
+
+/* ============ RENDER ============ */
+const VIEWS={ruta:vRuta,dosis:vDosis,ohp:vOhp,ddx:vDdx,genit:vGenit,segui:vSegui,casos:vCasos,refs:vRefs};
+function renderTabs(){$('#tabs').innerHTML=TABS.map(([k,t])=>`<button class="tab ${S.view===k?'on':''}" data-tab="${k}">${t}</button>`).join('');
+ const on=$('#tabs .on'); if(on) on.scrollIntoView({inline:'center',block:'nearest'});}
+function render(keepScroll){const y=window.scrollY; $('#app').innerHTML=VIEWS[S.view](); renderTabs(); bindInputs(); if(keepScroll) window.scrollTo(0,y); else window.scrollTo(0,0); save();}
+function go(target){
+ const [v,r]=target.split(':'); S.view=v; if(r) S.route=r;
+ $('#cover').classList.add('out'); setTimeout(()=>{$('#cover').style.display='none'},460);
+ render();
+}
+function save(){try{localStorage.setItem('hscneo',JSON.stringify({w:S.w,l:S.l,view:S.view,route:S.route}))}catch(e){}}
+function load(){try{const d=JSON.parse(localStorage.getItem('hscneo')||'{}');Object.assign(S,{w:d.w||'',l:d.l||'',route:d.route||'A'})}catch(e){}}
+
+function bindInputs(){
+ const w=$('#w'),l=$('#l');
+ if(w){[w,l].forEach(el=>el.addEventListener('change',()=>{S.w=w.value.replace(',','.');S.l=l.value.replace(',','.');render(true)}));}
+ const map={ov:'v',oc:'c',oeg:'eg',opn:'pn',oh:'h'};
+ Object.keys(map).forEach(id=>{const el=$('#'+id); if(el) el.addEventListener('input',()=>{S.ohp[map[id]]=el.value.replace(',','.')});});
+ const ou=$('#ou'); if(ou) ou.addEventListener('change',()=>{S.ohp.u=ou.value});
+}
+document.addEventListener('click',ev=>{
+ const t=ev.target.closest('[data-go],[data-tab],[data-route],[data-ohp],[data-dd],[data-ems],[data-ans],#ogo,#mkcard,#prcard,#ddreset,#hlogo');
+ if(!t) return;
+ if(t.dataset.go){ev.preventDefault();go(t.dataset.go);return;}
+ if(t.id==='hlogo'){const c=$('#cover');c.style.display='';requestAnimationFrame(()=>c.classList.remove('out'));c.scrollTop=0;return;}
+ if(t.dataset.tab){S.view=t.dataset.tab;render();return;}
+ if(t.dataset.route){S.route=t.dataset.route;render(true);return;}
+ if(t.dataset.ohp){S.ohp[t.dataset.ohp]=t.dataset.v;S.ohp.res='';render(true);return;}
+ if(t.dataset.dd!==undefined&&t.dataset.dd){S.ddx[t.dataset.dd]=t.dataset.v;render(true);return;}
+ if(t.dataset.ems){S.ems[t.dataset.ems]=parseFloat(t.dataset.v);render(true);return;}
+ if(t.dataset.ans){$('#'+t.dataset.ans).classList.toggle('on');t.textContent=$('#'+t.dataset.ans).classList.contains('on')?'Ocultar respuesta':'Ver respuesta';return;}
+ if(t.id==='ogo'){if(!S.ohp.tipo)S.ohp.tipo='tam';S.ohp.res=interpOhp();$('#ores').innerHTML=S.ohp.res;$('#ores').scrollIntoView({behavior:'smooth',block:'start'});return;}
+ if(t.id==='mkcard'){emergencyCard();return;}
+ if(t.id==='prcard'){emergencyCard();window.print();return;}
+ if(t.id==='ddreset'){S.ddx={k:'',g:'',gon:'',salt:'',o:'',f:{}};render(true);return;}
+});
+document.addEventListener('change',ev=>{
+ const t=ev.target;
+ if(t.dataset&&t.dataset.oc){S.ohp[t.dataset.oc]=t.checked;}
+ if(t.dataset&&t.dataset.df){S.ddx.f[t.dataset.df]=t.checked;render(true);}
+ if(t.id==='ecname'){emergencyCard();}
+});
+
+/* ============ ÍCONO, MANIFIESTO, SW ============ */
+function drawIcon(c,sz){
+ const x=c.getContext('2d'),s=sz/512;
+ const g=x.createRadialGradient(256*s,120*s,20*s,256*s,256*s,380*s);g.addColorStop(0,'#5a1f2a');g.addColorStop(1,'#1d0b0e');
+ x.fillStyle=g;x.fillRect(0,0,sz,sz);
+ // riñón
+ x.save();x.translate(256*s,300*s);x.fillStyle='#b5552f';x.beginPath();
+ x.moveTo(-40*s,-120*s);x.bezierCurveTo(-170*s,-130*s,-190*s,90*s,-60*s,140*s);x.bezierCurveTo(0*s,160*s,20*s,100*s,10*s,60*s);
+ x.bezierCurveTo(0*s,30*s,-20*s,10*s,10*s,-20*s);x.bezierCurveTo(40*s,-50*s,70*s,-110*s,-40*s,-120*s);x.fill();x.restore();
+ // corona suprarrenal
+ x.fillStyle='#e9c27a';x.beginPath();x.moveTo(200*s,170*s);x.lineTo(256*s,70*s);x.lineTo(330*s,180*s);x.quadraticCurveTo(262*s,150*s,200*s,170*s);x.fill();
+ // canal andrógeno
+ x.strokeStyle='#ff6b7a';x.lineWidth=18*s;x.lineCap='round';x.beginPath();x.moveTo(380*s,150*s);x.lineTo(380*s,400*s);x.stroke();
+ x.fillStyle='#f6efe4';x.font=`600 ${92*s}px Georgia,serif`;x.textAlign='center';x.fillText('21',236*s,330*s);
+ x.fillStyle='#d9b98a';x.font=`600 ${44*s}px Menlo,monospace`;x.fillText('HSC',256*s,470*s);
+}
+function setupIcons(){
+ const big=document.createElement('canvas');big.width=big.height=512;drawIcon(big,512);
+ const png=big.toDataURL('image/png');
+ const c180=document.createElement('canvas');c180.width=c180.height=180;drawIcon(c180,180);
+ $('#ati').href=c180.toDataURL('image/png');$('#fav').href=png;
+ drawIcon($('#hlogo'),68);
+ try{const m={name:'HSC Neo · Hiperplasia suprarrenal congénita',short_name:'HSC Neo',start_url:location.href.split('#')[0],display:'standalone',background_color:'#2a1216',theme_color:'#2a1216',icons:[{src:png,sizes:'512x512',type:'image/png'}]};
+  $('#mf').href=URL.createObjectURL(new Blob([JSON.stringify(m)],{type:'application/manifest+json'}));}catch(e){}
+}
+load(); setupIcons(); renderTabs(); render();
+if('serviceWorker' in navigator && location.protocol!=='file:'){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));}
+</script>
+</body>
+</html>
